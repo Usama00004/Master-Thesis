@@ -1,0 +1,81 @@
+\documentclass[11pt,a4paper]{article}
+
+%%%% Include Packages
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Pagella} % Or any other modern font supporting ß
+\usepackage[empty]{fullpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{geometry}
+\usepackage{setspace}
+
+%%%% Set Margins
+\geometry{top=1in, bottom=1in, left=0.6in, right=0.6in}
+
+%%%% Define Colors
+\definecolor{UI_blue}{RGB}{32, 64, 151}
+
+%%%% Document Content
+\begin{document}
+
+\vspace{1cm} % Space between header and addresses
+
+% Sender and recipient addresses
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+    Prof \\
+    Leipziger Str 123\\
+    36037 Fulda\\
+    Deutschland
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \raggedleft
+    Usama Tahir \\
+    Moltke Str 35 \\
+    36039, Fulda \\
+    Deutschland \\
+    \vspace{1cm} % Adjust the space as needed
+    \today
+\end{minipage}
+
+\vspace{1cm} % Space between addresses and subject line
+
+% Subject line
+\noindent
+\textbf{Betreuung einer Masterarbeit im Unternehmen ab Sommersemester 2026}
+
+\vspace{0.2cm} % Space between subject line and main content
+
+% Main letter content
+\justify
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{12pt}
+
+Sehr geehrter Professor [Nachname],
+
+ich hoffe, es geht Ihnen gut.
+
+Mein Name ist Usama Tahir, und ich studiere derzeit im Masterstudiengang Global Software Development an der Hochschule Fulda.
+
+Derzeit arbeite ich als Big Data Analyst im eBikes-Labor von Bosch in Reutlingen, wo mir auch die Möglichkeit angeboten wurde, meine Masterarbeit im Unternehmen zu schreiben. Zuvor war ich als Werkstudent im Bereich Big Data Analytics bei Siemens Healthineers tätig. Mein akademischer und beruflicher Hintergrund liegt insbesondere in den Bereichen Datenanalyse und Softwareentwicklung, und ich bin sehr daran interessiert, meine Masterarbeit an praxisnahen, industriellen Fragestellungen auszurichten – insbesondere im Bereich datengestützter Systeme, intelligenter Softwarelösungen oder eingebetteter Analytik.
+
+Mit dieser E-Mail möchte ich höflich anfragen, ob Sie die Betreuung meiner Masterarbeit übernehmen könnten, die ich im kommenden Semester beginnen möchte.
+
+Ich interessiere mich sehr für Ihre Forschungsgebiete und würde mich freuen, wenn sich eine Zusammenarbeit ergeben würde. Falls Sie im kommenden Semester keine Kapazitäten mehr haben, wäre ich auch offen dafür, im Sommersemester mit der Masterarbeit zu beginnen.
+
+
+
+Ich danke Ihnen herzlich für Ihre Zeit und Rückmeldung. Gerne stehe ich auch für ein persönliches Gespräch zur Verfügung.
+
+\vspace{0.5cm}
+
+Mit freundlichen Grüßen,\\
+
+
+Usama Tahir \\ 
+(+49)-176-84973934 \\ 
+\href{https://usama00004.github.io/portfolio/}{https://usama00004.github.io/portfolio/}
+
+\end{document}
