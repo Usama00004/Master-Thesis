@@ -1,0 +1,743 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Master's Thesis
+%% LLM Agents and their Ability to Support Feature Construction
+%% in Data Mining Tasks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper]{report}
+
+% ---------------------------------------------------------
+% Packages
+% ---------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pslatex}
+\usepackage{apacite}
+\usepackage{fancyhdr}
+\usepackage[
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=2.5cm
+]{geometry}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{enumitem}
+
+% ---------------------------------------------------------
+% General formatting
+% ---------------------------------------------------------
+\onehalfspacing
+\setlength{\parindent}{0.5cm}
+\setlength{\parskip}{0.2em}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black,
+    pdftitle={LLM Agents and their Ability to Support Feature Construction in Data Mining Tasks},
+    pdfauthor={Usama Tahir}
+}
+
+% ---------------------------------------------------------
+% Header / Footer
+% ---------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Usama Tahir}
+\fancyhead[R]{LLM-Assisted Feature Construction}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------------------------------------------------------
+% Document information
+% ---------------------------------------------------------
+\newcommand{\thesistitle}{LLM Agents and their Ability to Support Feature Construction in Data Mining Tasks}
+\newcommand{\authorname}{Usama Tahir}
+\newcommand{\matriculation}{1453517}
+\newcommand{\supervisor}{Prof. Dr. Frank Klingert}
+\newcommand{\program}{Master's Programme in Global Software Development}
+\newcommand{\department}{Department of Applied Computer Science}
+\newcommand{\university}{Fulda University of Applied Sciences}
+\newcommand{\submissionyear}{2026}
+
+% =========================================================
+% DOCUMENT
+% =========================================================
+\begin{document}
+
+% ---------------------------------------------------------
+% Title page
+% ---------------------------------------------------------
+\begin{titlepage}
+    \centering
+
+    % Uncomment when the university logo is available:
+    % \includegraphics[width=0.35\textwidth]{university-logo.png}\\[1.5cm]
+
+    {\Large \university\par}
+    \vspace{0.5cm}
+    {\large \department\par}
+
+    \vfill
+
+    {\Large \textbf{Master's Thesis}\par}
+    \vspace{1.2cm}
+
+    {\LARGE \textbf{\thesistitle}\par}
+
+    \vspace{1.5cm}
+
+    {\large submitted by\par}
+    \vspace{0.3cm}
+    {\Large \textbf{\authorname}\par}
+    \vspace{0.2cm}
+    {\large Matriculation No.: \matriculation\par}
+
+    \vfill
+
+    \begin{tabular}{ll}
+        \textbf{Programme:} & \program \\
+        \textbf{Supervisor:} & \supervisor \\
+        \textbf{Year:} & \submissionyear
+    \end{tabular}
+
+\end{titlepage}
+
+% ---------------------------------------------------------
+% Front matter
+% ---------------------------------------------------------
+\pagenumbering{roman}
+
+\chapter*{Declaration}
+I hereby declare that I have written this thesis independently and that all
+sources and materials used in this work have been appropriately acknowledged.
+Any assistance received during the development of the research, implementation,
+and documentation has been disclosed where applicable.
+
+\vspace{1cm}
+
+\noindent
+Place, Date: \rule{5cm}{0.4pt}
+
+\vspace{1cm}
+
+\noindent
+Signature: \rule{5cm}{0.4pt}
+
+\chapter*{Acknowledgements}
+% SAMPLE TEXT -- adapt before submission.
+I would like to express my sincere gratitude to my supervisor, Prof. Dr. Frank
+Klingert, for his guidance, feedback, and support throughout this research
+project. I am also grateful to the faculty and staff of Fulda University of
+Applied Sciences for providing the academic environment and resources required
+to complete this work.
+
+Finally, I would like to thank everyone who supported me during the development
+of this thesis and contributed, directly or indirectly, to its completion.
+
+\chapter*{Abstract}
+% SAMPLE TEXT -- replace the final sentences with your actual findings.
+Feature construction is an important component of data mining and machine
+learning because the representation of data can substantially influence the
+performance and interpretability of predictive models. Traditional feature
+engineering commonly depends on manual analysis and domain expertise, which can
+make the process time-consuming and difficult to scale.
+
+This thesis investigates whether large language model (LLM) agents can support
+feature construction by generating candidate features from structured
+datasets. The study develops a prompt-driven framework in which an LLM receives
+information about a dataset, proposes feature transformations, and produces
+candidate features that can subsequently be evaluated using statistical and
+machine learning methods. The generated features are compared with a baseline
+based on conventional feature engineering.
+
+The experimental study uses the Default of Credit Card Clients dataset as a
+case study. Different prompting strategies are investigated to examine their
+effect on the relevance, interpretability, and predictive usefulness of
+generated features. The evaluation considers standard classification metrics
+including accuracy, precision, recall, F1-score, and ROC-AUC, together with
+feature-level analysis.
+
+% TODO: Add 3--5 sentences describing your ACTUAL experimental results.
+% Do not invent results here.
+
+\chapter*{Keywords}
+Large Language Models; LLM Agents; Feature Engineering; Feature Construction;
+Data Mining; Prompt Engineering; Machine Learning; Automated Feature Generation
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\pagenumbering{arabic}
+
+% =========================================================
+% CHAPTER 1
+% =========================================================
+\chapter{Introduction}
+
+\section{Background}
+Feature engineering plays a central role in data mining and machine learning.
+The quality of the representation provided to a learning algorithm can affect
+both predictive performance and interpretability. Conventional feature
+engineering frequently requires domain expertise and manual experimentation,
+particularly when useful relationships are not directly represented by the
+original variables.
+
+Recent developments in large language models have created opportunities to
+support analytical tasks that traditionally required substantial human
+reasoning. Because LLMs can interpret natural-language descriptions and
+structured information, they provide a potential mechanism for generating
+candidate transformations of existing variables.
+
+This thesis investigates the use of LLM agents for feature construction. Rather
+than treating the LLM only as a text-generation system, the proposed approach
+uses it as a component of an experimental data mining workflow. The objective
+is to determine whether LLM-generated features can provide useful information
+for downstream machine learning models.
+
+\section{Problem Statement}
+Traditional feature construction can be time-consuming and strongly dependent
+on the experience of the data scientist. Although automated feature engineering
+methods can reduce manual effort, they may provide limited semantic
+interpretability or require task-specific configuration.
+
+The research problem addressed in this thesis is therefore how LLM agents can
+be used to support the generation of meaningful features while maintaining a
+systematic and evaluable process.
+
+\section{Research Aim}
+The main aim of this thesis is to investigate the ability of LLM agents to
+support feature construction in data mining tasks through prompt-driven
+feature generation.
+
+\section{Research Objectives}
+The research has the following objectives:
+
+\begin{enumerate}
+    \item Investigate the role of feature construction in machine learning.
+    \item Design an LLM-based approach for generating candidate features.
+    \item Develop and compare different prompt strategies.
+    \item Evaluate generated features using statistical and machine learning
+          based criteria.
+    \item Compare LLM-generated features with conventionally engineered
+          features.
+    \item Analyse the interpretability, relevance, consistency, and limitations
+          of LLM-generated features.
+\end{enumerate}
+
+\section{Research Questions}
+The study is structured around the following research questions:
+
+\begin{enumerate}
+    \item \textbf{RQ1:} To what extent can LLM agents generate meaningful
+          features for structured data mining tasks?
+    \item \textbf{RQ2:} How does prompt design influence the quality and
+          usefulness of LLM-generated features?
+    \item \textbf{RQ3:} Do LLM-generated features improve the predictive
+          performance of machine learning models compared with a baseline?
+    \item \textbf{RQ4:} How interpretable and consistent are the features
+          generated by an LLM agent?
+\end{enumerate}
+
+\section{Scope of the Study}
+The research focuses on structured tabular data and classification-oriented
+data mining. The primary case study is the Default of Credit Card Clients
+dataset. The work focuses on feature construction rather than developing a
+fully autonomous end-to-end machine learning system.
+
+\section{Contributions}
+The expected contributions of this thesis are:
+
+\begin{itemize}
+    \item an experimental framework for LLM-assisted feature construction;
+    \item a set of prompt strategies for candidate feature generation;
+    \item an evaluation procedure combining feature-level and model-level
+          analysis;
+    \item a comparison between LLM-generated and conventional features; and
+    \item an analysis of the strengths and limitations of LLM agents in this
+          setting.
+\end{itemize}
+
+\section{Thesis Structure}
+Chapter 2 presents the theoretical background and relevant concepts. Chapter 3
+reviews related research on feature engineering, automated feature
+construction, and LLM-based approaches. Chapter 4 describes the proposed
+methodology and system architecture. Chapter 5 presents the dataset and data
+preparation process. Chapter 6 describes the experimental setup and evaluation
+strategy. Chapter 7 presents the experimental results. Chapter 8 discusses the
+results and research questions. Chapter 9 concludes the thesis and presents
+limitations and future research directions.
+
+% =========================================================
+% CHAPTER 2
+% =========================================================
+\chapter{Theoretical Background}
+
+\section{Feature Engineering and Feature Construction}
+Feature engineering refers to the process of transforming raw variables into
+representations that are more suitable for machine learning algorithms.
+Feature construction is a related process in which new variables are derived
+from existing attributes.
+
+Examples include ratios, differences, aggregations, interactions, counts, and
+temporal summaries. For a dataset containing a bill amount $B$ and a payment
+amount $P$, for example, a payment ratio can be defined as
+
+\begin{equation}
+    R = \frac{P}{B + \epsilon},
+\end{equation}
+
+where $\epsilon$ is a small constant used to avoid division by zero.
+
+Such transformations can expose relationships that are not directly visible
+in the original variables.
+
+\section{Automated Feature Engineering}
+Automated feature engineering aims to reduce the manual effort required to
+construct useful variables. Existing approaches may rely on predefined
+transformation libraries, search procedures, symbolic methods, or automated
+machine learning systems.
+
+The main challenge is balancing the number of generated candidates with their
+quality, computational cost, redundancy, and interpretability.
+
+\section{Large Language Models}
+Large language models are neural models trained on large collections of text
+and capable of generating and transforming natural language. Their ability to
+follow instructions and reason over contextual information makes them
+potentially useful for tasks that require semantic interpretation.
+
+In this thesis, the LLM is used to interpret dataset metadata and propose
+candidate feature transformations rather than directly replacing the machine
+learning model.
+
+\section{Prompt Engineering}
+Prompt engineering refers to the design of instructions provided to an LLM.
+For feature construction, prompts can specify the dataset schema, variable
+types, target variable, desired transformation types, constraints, and output
+format.
+
+The experiments in this thesis treat prompt design as an experimental
+condition. This makes it possible to examine whether changes in instructions
+produce differences in generated feature quality.
+
+\section{LLM Agents}
+An LLM agent can be understood as an LLM-based component embedded within a
+workflow in which it receives information, performs a reasoning or generation
+step, and produces an output that is used by subsequent components.
+
+For this thesis, the agent is organized around the feature construction task:
+dataset information is provided as input, candidate features are generated,
+the candidates are validated, and selected features are integrated into the
+machine learning pipeline.
+
+% =========================================================
+% CHAPTER 3
+% =========================================================
+\chapter{Related Work}
+
+\section{Feature Engineering in Data Mining}
+% TODO: Add literature-supported discussion here.
+Traditional feature engineering has been extensively studied in machine
+learning and data mining. Research has shown that suitable representations can
+improve predictive performance and can sometimes make model behaviour easier
+to interpret.
+
+\section{Automated Feature Construction}
+% TODO: Insert reviewed papers and compare their methods.
+Automated approaches attempt to search a transformation space systematically.
+However, the size of the search space can become large when many variables and
+transformation operators are available. This creates a need for mechanisms
+that can prioritize semantically plausible candidates.
+
+\section{LLMs for Data Science Tasks}
+% TODO: Add literature from your literature review.
+Recent research has explored the use of LLMs for tasks involving data analysis,
+program generation, and machine learning workflows. These studies motivate the
+investigation of whether LLMs can also contribute to feature construction.
+
+\section{Research Gap}
+The central gap investigated in this thesis is the limited understanding of how
+prompt-driven LLM agents can be systematically evaluated as feature
+construction assistants. In particular, the study focuses not only on whether
+an LLM can produce feature descriptions, but whether generated features can be
+implemented, validated, and shown to provide measurable value for downstream
+machine learning.
+
+% =========================================================
+% CHAPTER 4
+% =========================================================
+\chapter{Methodology}
+
+\section{Research Design}
+The study follows an experimental research design. A conventional feature
+engineering baseline is established first. LLM-generated features are then
+created under controlled prompting conditions and evaluated using the same
+downstream machine learning procedure.
+
+\section{Overall Workflow}
+The proposed workflow consists of the following stages:
+
+\begin{enumerate}
+    \item dataset collection and understanding;
+    \item data preprocessing;
+    \item baseline feature engineering;
+    \item LLM prompt construction;
+    \item candidate feature generation;
+    \item feature validation and integration;
+    \item model training;
+    \item quantitative evaluation;
+    \item feature interpretation; and
+    \item comparison and analysis.
+\end{enumerate}
+
+\section{System Architecture}
+The architecture contains the data layer, LLM feature generation layer,
+validation layer, and machine learning evaluation layer.
+
+\begin{figure}[H]
+    \centering
+    % Replace with your final architecture image.
+    \includegraphics[width=0.90\textwidth]{Project Architecture Diagram.png}
+    \caption{Proposed architecture for LLM-assisted feature construction.}
+    \label{fig:architecture}
+\end{figure}
+
+\section{Dataset Representation for the LLM}
+To reduce the possibility of the LLM identifying the original benchmark
+dataset directly, the experimental input can be represented using adapted
+attribute names and a controlled schema description. The underlying numerical
+and categorical relationships required for feature construction are preserved.
+
+\section{Prompt Design}
+Each prompt specifies the task, available variables, variable descriptions,
+target variable, and constraints on candidate features. The LLM is instructed
+to return structured feature definitions that can be processed by the
+implementation.
+
+A candidate feature can be represented conceptually as:
+
+\begin{verbatim}
+{
+  "feature_name": "...",
+  "description": "...",
+  "operation": "...",
+  "columns": ["...", "..."]
+}
+\end{verbatim}
+
+% TODO: Insert your actual prompt versions and examples.
+
+\section{Feature Validation}
+Generated features are checked for syntactic validity, missing dependencies,
+invalid operations, data leakage, and redundancy. Features that cannot be
+computed from the available training data are excluded.
+
+\section{Baseline}
+A baseline is established using the original dataset and conventional feature
+engineering. The baseline provides the reference point against which the
+LLM-enhanced feature set is evaluated.
+
+\section{Machine Learning Models}
+% TODO: Replace this section with the exact models actually used.
+The experimental evaluation can use one or more classification algorithms.
+The same model configuration should be used across baseline and LLM-enhanced
+feature sets to ensure that observed differences are attributable primarily
+to the feature representation.
+
+% =========================================================
+% CHAPTER 5
+% =========================================================
+\chapter{Dataset and Data Preparation}
+
+\section{Dataset Description}
+The primary dataset is the \textit{Default of Credit Card Clients} dataset.
+It contains information about 30,000 credit card clients in Taiwan, including
+demographic attributes, historical payment records, bill statements, and
+previous payment amounts. The target variable indicates whether a client
+defaulted on a credit card payment in the following month.
+
+\section{Data Characteristics}
+The dataset contains numerical and categorical variables representing different
+aspects of customer demographics, credit limits, bill amounts, payment amounts,
+and repayment history.
+
+\begin{table}[H]
+\centering
+\caption{Example dataset characteristics}
+\label{tab:dataset}
+\begin{tabular}{ll}
+\toprule
+\textbf{Characteristic} & \textbf{Description} \\
+\midrule
+Observations & 30,000 clients \\
+Domain & Credit card default prediction \\
+Data type & Structured/tabular \\
+Target & Default in the following month \\
+Variables & Demographic, financial, payment-history attributes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Data Preprocessing}
+The preprocessing pipeline includes data inspection, missing-value handling,
+categorical encoding where required, normalization or scaling where required
+by the selected model, and separation of training and test data.
+
+\section{Exploratory Data Analysis}
+Exploratory data analysis is used to understand variable distributions,
+potential outliers, class balance, correlations, and relationships between
+predictors and the target variable.
+
+% TODO: Add actual plots and observations.
+
+\section{Data Leakage Prevention}
+All transformations that learn information from the data should be fitted on
+the training partition and applied to the test partition. This is particularly
+important when generated features or feature-selection criteria depend on
+statistical properties of the data.
+
+% =========================================================
+% CHAPTER 6
+% =========================================================
+\chapter{Experimental Setup}
+
+\section{Experimental Conditions}
+The experiments compare at least two major conditions:
+
+\begin{enumerate}
+    \item original/baseline feature set;
+    \item baseline plus LLM-generated features.
+\end{enumerate}
+
+Additional prompt variants can be evaluated as separate experimental
+conditions.
+
+\section{Evaluation Metrics}
+For classification, the following metrics are considered:
+
+\subsection{Accuracy}
+Accuracy measures the proportion of correctly classified observations.
+
+\begin{equation}
+Accuracy = \frac{TP + TN}{TP + TN + FP + FN}.
+\end{equation}
+
+\subsection{Precision}
+Precision measures the proportion of predicted positive cases that are
+actually positive.
+
+\begin{equation}
+Precision = \frac{TP}{TP + FP}.
+\end{equation}
+
+\subsection{Recall}
+Recall measures the proportion of actual positive cases correctly identified.
+
+\begin{equation}
+Recall = \frac{TP}{TP + FN}.
+\end{equation}
+
+\subsection{F1-Score}
+The F1-score is the harmonic mean of precision and recall.
+
+\begin{equation}
+F1 = 2 \times \frac{Precision \times Recall}
+{Precision + Recall}.
+\end{equation}
+
+\subsection{ROC-AUC}
+ROC-AUC is used to assess the ability of a classifier to discriminate between
+the classes across different decision thresholds.
+
+\section{Feature-Level Evaluation}
+Generated features are also evaluated independently of model performance.
+The analysis considers:
+
+\begin{itemize}
+    \item relevance to the target task;
+    \item interpretability;
+    \item consistency across runs;
+    \item redundancy with existing variables;
+    \item computational feasibility; and
+    \item validity of the proposed transformation.
+\end{itemize}
+
+\section{Reproducibility}
+The implementation should record the dataset version, preprocessing
+configuration, prompt version, LLM configuration, generated feature definitions,
+random seeds, model parameters, and evaluation results.
+
+% =========================================================
+% CHAPTER 7
+% =========================================================
+\chapter{Results}
+
+\section{Overview}
+This chapter presents the results obtained from the experimental evaluation.
+The results should be reported separately for the baseline, each prompt
+condition, and the final selected LLM-generated feature set.
+
+\section{Generated Features}
+% TODO: Replace with your actual generated features.
+The LLM generated candidate features based on the available variables and the
+instructions provided in the prompt. Candidate features were then checked for
+validity and integrated into the experimental pipeline when they satisfied the
+defined constraints.
+
+\begin{table}[H]
+\centering
+\caption{Example structure for reporting generated features}
+\label{tab:features}
+\begin{tabular}{p{3.5cm}p{4.5cm}p{3cm}}
+\toprule
+\textbf{Feature} & \textbf{Description} & \textbf{Operation} \\
+\midrule
+Feature A & Example description & Ratio \\
+Feature B & Example description & Interaction \\
+Feature C & Example description & Aggregation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Model Performance}
+% TODO: Insert actual experimental values.
+\begin{table}[H]
+\centering
+\caption{Model performance comparison}
+\label{tab:performance}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Condition} & \textbf{Accuracy} & \textbf{Precision} &
+\textbf{Recall} & \textbf{F1} & \textbf{ROC-AUC} \\
+\midrule
+Baseline & -- & -- & -- & -- & -- \\
+LLM features & -- & -- & -- & -- & -- \\
+Best prompt & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Feature Importance}
+% TODO: Add actual feature importance results.
+Feature importance analysis is used to determine whether LLM-generated
+features contribute meaningfully to the final predictive model. This analysis
+can also help identify redundant or low-value generated variables.
+
+\section{Prompt Comparison}
+% TODO: Add actual results for each prompt.
+The prompt conditions are compared to determine whether additional context,
+constraints, examples, or structured output requirements influence the quality
+of the generated features.
+
+% =========================================================
+% CHAPTER 8
+% =========================================================
+\chapter{Discussion}
+
+\section{Interpretation of Results}
+The results are interpreted in relation to the research questions. In
+particular, the analysis considers whether generated features provide measurable
+improvements over the baseline and whether improvements are consistent across
+experimental conditions.
+
+% TODO: Discuss actual findings rather than hypothetical outcomes.
+
+\section{Answer to RQ1}
+% TODO: Answer using evidence from Chapter 7.
+The first research question concerns the ability of an LLM agent to generate
+meaningful features. The answer should be based on the proportion of valid,
+relevant, interpretable, and experimentally useful candidate features.
+
+\section{Answer to RQ2}
+% TODO: Compare prompt variants.
+The second research question concerns the influence of prompt design. The
+discussion should compare feature validity, diversity, redundancy, and model
+performance across the tested prompts.
+
+\section{Answer to RQ3}
+% TODO: Compare baseline and LLM-enhanced performance.
+The third research question concerns downstream predictive performance. The
+analysis should report whether the addition of LLM-generated features changes
+the selected evaluation metrics.
+
+\section{Answer to RQ4}
+% TODO: Evaluate interpretability and consistency.
+The fourth research question concerns the interpretability and consistency of
+the generated features. Examples should be provided to demonstrate both useful
+and problematic feature suggestions.
+
+\section{Implications}
+If supported by the experimental results, LLM-assisted feature construction
+could reduce part of the manual effort involved in exploratory feature
+engineering. However, the LLM should be considered an assistant rather than a
+replacement for validation because generated transformations can be redundant,
+invalid, or inappropriate for a particular modelling task.
+
+\section{Limitations}
+Potential limitations include dependence on the selected dataset, sensitivity
+to prompt wording, stochastic variation between LLM runs, computational and
+API costs, possible hallucinated transformations, and the difficulty of
+measuring feature usefulness independently from the downstream model.
+
+% =========================================================
+% CHAPTER 9
+% =========================================================
+\chapter{Conclusion and Future Work}
+
+\section{Conclusion}
+This thesis investigated the use of LLM agents to support feature construction
+in data mining tasks. The proposed approach integrates prompt-driven candidate
+feature generation with conventional data preprocessing, validation, and
+machine learning evaluation.
+
+The study is designed to evaluate both the practical usefulness and the
+interpretability of LLM-generated features. By comparing LLM-enhanced feature
+sets with a conventional baseline, the research provides an experimental basis
+for assessing whether LLMs can contribute to feature engineering workflows.
+
+% TODO: Replace the following with your actual final findings.
+The final conclusion should summarize the strongest experimental findings,
+identify which research questions were supported, and state the practical
+implications of the results.
+
+\section{Future Work}
+Future research could investigate additional datasets and domains, alternative
+LLM models, more advanced agent architectures, iterative feedback loops, and
+human-in-the-loop validation. Further work could also explore automated feature
+selection, redundancy reduction, cost-aware generation, and integration with
+larger-scale machine learning pipelines.
+
+% =========================================================
+% REFERENCES
+% =========================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% =========================================================
+% APPENDICES
+% =========================================================
+\appendix
+
+\chapter{Prompts}
+% TODO: Insert final prompts used in the experiments.
+
+\chapter{Generated Feature Definitions}
+% TODO: Include complete machine-readable feature definitions if useful.
+
+\chapter{Additional Results}
+% TODO: Include additional tables, plots, confusion matrices, and analyses.
+
+\end{document}

@@ -18,15 +18,17 @@ def display_dataset_info(df):
     return df
 
 
-def data_columns_changer(df):
-    df.columns = [f"col{i}" for i in range(1, len(df.columns) + 1)]
-    print("-----------Dummy Column Names---------")
-    print(df.columns.tolist())
+# def data_columns_changer(df):
+#     df.columns = [f"col{i}" for i in range(1, len(df.columns) + 1)]
+#     print("-----------Dummy Column Names---------")
+#     print(df.columns.tolist())
     
 def main():
     df = load_credit_card_dataset()
     display_dataset_info(df)
-    data_columns_changer(df)
+    print("\nFirst 5 rows:")
+    print(df.head())
+    # data_columns_changer(df)
 
 if __name__ == "__main__":
     main()
