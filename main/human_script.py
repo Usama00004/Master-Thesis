@@ -43,7 +43,7 @@ def prepare_data(df):
         "AGE",
         "PAY_AMT6",
         "BILL_AMT6",
-        "PAY_6",
+        "PAY_6"
     ]
 
     X = df[selected_features]
@@ -76,7 +76,7 @@ def evaluate_model(model, X_test, y_test):
     f1 = f1_score(y_test, y_pred)
     roc_auc = roc_auc_score(y_test, y_probability)
 
-    print("\n----------- Model Evaluation -----------")
+    print("\n----------- Model Evaluation ----------")
 
     print(f"Accuracy  : {accuracy:.4f}")
     print(f"Precision : {precision:.4f}")
