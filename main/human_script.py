@@ -2,6 +2,9 @@ import kagglehub
 from kagglehub import KaggleDatasetAdapter
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -40,10 +43,10 @@ def prepare_data(df):
 
     selected_features = [
         "LIMIT_BAL",
+        "SEX",
         "AGE",
-        "PAY_AMT6",
-        "BILL_AMT6",
-        "PAY_6"
+        "BILL_AMT1",
+        "PAY_0"
     ]
 
     X = df[selected_features]
@@ -54,8 +57,20 @@ def prepare_data(df):
 
 def train_model(X_train, y_train):
 
-    model = RandomForestClassifier(
+    # model = RandomForestClassifier(
+    #     n_estimators=200,
+    #     random_state=42,
+    #     n_jobs=-1
+    # )
+
+    model = XGBClassifier(
         n_estimators=200,
+        max_depth=6,
+        learning_rate=0.05,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        objective="binary:logistic",
+        eval_metric="logloss",
         random_state=42,
         n_jobs=-1
     )
