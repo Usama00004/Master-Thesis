@@ -43,11 +43,13 @@ def prepare_data(df):
 
     selected_features = [
         "LIMIT_BAL",
-        "SEX",
         "AGE",
+        "PAY_0",
         "BILL_AMT1",
-        "PAY_0"
+        "PAY_AMT1"
+        
     ]
+
 
     X = df[selected_features]
     y = df[target_column]
@@ -94,9 +96,9 @@ def evaluate_model(model, X_test, y_test):
     print("\n----------- Model Evaluation ----------")
 
     print(f"Accuracy  : {accuracy:.4f}")
+    print(f"F1 Score  : {f1:.4f}")
     print(f"Precision : {precision:.4f}")
     print(f"Recall    : {recall:.4f}")
-    print(f"F1 Score  : {f1:.4f}")
     print(f"ROC-AUC   : {roc_auc:.4f}")
 
     print("\n----------- Classification Report -----------")

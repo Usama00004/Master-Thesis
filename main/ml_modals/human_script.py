@@ -43,11 +43,12 @@ def prepare_data(df):
 
     selected_features = [
         "LIMIT_BAL",
-        "SEX",
         "AGE",
-        "BILL_AMT1",
-        "PAY_0"
+        "PAY_AMT6",
+        "BILL_AMT6",
+        "PAY_6"
     ]
+
 
     X = df[selected_features]
     y = df[target_column]

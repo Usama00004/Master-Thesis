@@ -77,105 +77,94 @@ def get_dataset_info(df):
 # =======================================
 
 def generate_feature_prompt(dataset_info):
+
+    long_prompt = f"""
+    You are an expert machine learning feature engineering agent.
+
+    Your task is to analyze the dataset information provided below and
+    identify the 5 most relevant existing input columns that could be
+    used for feature engineering to improve prediction of the target
+    variable.
+
+    DATASET INFORMATION:
+    {json.dumps(dataset_info, indent=2, default=str)}
+
+    TARGET VARIABLE:
+    "Kreditausfall"
+
+    IMPORTANT RULES:
+    1. Carefully analyze and understand the dataset before selecting columns.
+    2. Identify the meaning, role, and data type of each column.
+    3. Determine which existing input columns are most relevant for predicting the target variable.
+    4. Select EXACTLY 5 existing input columns.
+    5. The target variable "Kreditausfall" MUST NOT be selected.
+    6. Do NOT use "Kreditausfall" directly or indirectly.
+    7. Only select columns that already exist in the dataset.
+    8. Do NOT create new features.
+    9. Do NOT perform mathematical operations or transformations.
+    10. The purpose of this task is ONLY to identify the most relevant existing columns that could later be used to construct new features.
+    11. Prefer columns that have a meaningful relationship with the target and provide useful information for feature construction.
+    12. Avoid selecting redundant columns when possible.
+    13. Do not select columns simply because they are numerical.Consider their meaning and potential predictive usefulness.
+    14. The selected columns should be suitable candidates for creating derived features such as ratios, differences, interactions, aggregations, or other transformations in a later step.
+
+    Return EXACTLY 5 columns.
+
+    Return ONLY valid JSON.
+
+    Do NOT include:
+    - Explanations
+    - Markdown
+    - ```json code fences
+    - Introductory text
+    - Concluding text
+    - New feature names
+    - Mathematical operations
+    - The target variable "Kreditausfall"
+
+    Use exactly this format:
+    [
+        {{
+            "column": "column name"
+        }},
+        {{
+            "column": "column name"
+        }},
+        {{
+            "column": "column name"
+        }},
+        {{
+            "column": "column name"
+        }},
+        {{
+            "column": "column name"
+        }}
+    ]
     """
-    Generate a prompt for the LLM to analyze the dataset and
-    select the 5 most relevant input columns for feature engineering.
 
-    Args:
-        dataset_info (dict): Dataset information dictionary
+    short_prompt = f"""
+        Select exactly 5 existing input columns most relevant for predicting "Kreditausfall".
 
-    Returns:
-        str: Formatted prompt string
-    """
+        Dataset:
+        {json.dumps(dataset_info, indent=2, default=str)}
 
-    prompt = f"""
-You are an expert machine learning feature engineering agent.
+        Rules:
+        - Exclude "Kreditausfall".
+        - Use only existing columns.
+        - No new features or transformations.
+        - Prefer meaningful, predictive, non-redundant columns useful for future feature engineering.
+        - Return ONLY valid JSON. and do not include explanations, markdown, or code fences.
 
-Your task is to analyze the dataset information provided below and
-identify the 5 most relevant existing input columns that could be
-used for feature engineering to improve prediction of the target
-variable.
+        [
+            {{"column": "column name"}},
+            {{"column": "column name"}},
+            {{"column": "column name"}},
+            {{"column": "column name"}},
+            {{"column": "column name"}}
+        ]
+        """
 
-DATASET INFORMATION:
-{json.dumps(dataset_info, indent=2, default=str)}
-
-TARGET VARIABLE:
-"Kreditausfall"
-
-IMPORTANT RULES:
-
-1. Carefully analyze and understand the dataset before selecting columns.
-
-2. Identify the meaning, role, and data type of each column.
-
-3. Determine which existing input columns are most relevant for
-   predicting the target variable.
-
-4. Select EXACTLY 5 existing input columns.
-
-5. The target variable "Kreditausfall" MUST NOT be selected.
-
-6. Do NOT use "Kreditausfall" directly or indirectly.
-
-7. Only select columns that already exist in the dataset.
-
-8. Do NOT create new features.
-
-9. Do NOT perform mathematical operations or transformations.
-
-10. The purpose of this task is ONLY to identify the most relevant
-    existing columns that could later be used to construct new features.
-
-11. Prefer columns that have a meaningful relationship with the target
-    and provide useful information for feature construction.
-
-12. Avoid selecting redundant columns when possible.
-
-13. Do not select columns simply because they are numerical.
-    Consider their meaning and potential predictive usefulness.
-
-14. The selected columns should be suitable candidates for creating
-    derived features such as ratios, differences, interactions,
-    aggregations, or other transformations in a later step.
-
-Return EXACTLY 5 columns.
-
-Return ONLY valid JSON.
-
-Do NOT include:
-- Explanations
-- Markdown
-- ```json code fences
-- Introductory text
-- Concluding text
-- New feature names
-- Mathematical operations
-- The target variable "Kreditausfall"
-
-Use exactly this format:
-
-[
-    {{
-        "column": "column name"
-    }},
-    {{
-        "column": "column name"
-    }},
-    {{
-        "column": "column name"
-    }},
-    {{
-        "column": "column name"
-    }},
-    {{
-        "column": "column name"
-    }}
-]
-"""
-
-    return prompt
-
-
+    return short_prompt
 
 
 # ==========================================
